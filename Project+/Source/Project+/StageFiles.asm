@@ -377,21 +377,6 @@ SpecialCase:
 	bctrl
 	b ModifyStageName	
 }
-# Fix replay loading, especially in the case of dual load pacs
-HOOK @ $811983E8
-{
-	lis r3, 0x805A		# \
-	lwz r3, 0xE0(r3)	# |
-	lwz r3, 0x08(r3)	# | Get stage ID
-	lhz r3, 0x1A(r3)	# /
-	lis r12, 0x8053
-	ori r12, r12, 0xE000
-	mtctr r12
-	li r0, -1			# \ Force clearing out of stage slot to avoid sticky alt selections.
-	sth r0, 0xFB8(r12)	# /
-	bctrl
-	lwz r0, 0x14(r1)		# Original operation
-}
 
 # Force secondary stage pacs to load based on the parameter
 # 806BC610
@@ -497,7 +482,7 @@ Custom Stage SD File Loader [DukeItOut, Random Alts by Kapedani]
 # Prerequisite: Stage ID in r3 (retrieves input, itself)
 ########################################################
 	.alias CodeMenuStart = 0x804E
-	.alias CodeMenuRandom1To1Option = 0x069C
+	.alias CodeMenuRandom1To1Option = 0x09DB
     .alias Random1To1AltsStartIndex = 16
 CODE @ $8053E000
 {
@@ -529,6 +514,8 @@ Reload:
 	li r0, 0xFF				# Clear random reroll flag for substages
 	stb r0, -0x7E(r12)		#
 	sth r7, -0x80(r12)		# Store stage ID
+	lhz r4, 2(r28)			#
+	sth r4, -0x46(r12)		# Store stage ASL ID
 	addi r3, r1, 0x90
 	lwz r4, -0x20(r12)		# "%s%s%02X%s"
 	lwz r5, -0x1C(r12)		# "/stage/"
