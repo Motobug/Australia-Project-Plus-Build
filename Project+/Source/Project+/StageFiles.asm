@@ -94,7 +94,7 @@ HOOK @ $8117DF4C	# My Music
 	andi. r7, r7, 0x60		# | by filtering for just the shoulder inputs and 	
 	stw r7, 0(r4)			# /
 	ori r12, r12, 0xE000	#
-	ori r7, r12, 0xC		# Bypass the safety check.
+	ori r7, r12, 0x24		# Bypass the safety check.
 	mtctr r7
 	bctrl
 	mr r3, r30		# Restore register 3
@@ -505,6 +505,7 @@ Reload:
 	ori r12, r12, 0x12EC	# |
 	mtctr r12				# | preserve registers r14-r31
 	bctrl					# /
+	mr r17, r10
 	lis r12, 0x8053
 	ori r12, r12, 0xF000
 	lis r28, 0x800B 
@@ -514,8 +515,6 @@ Reload:
 	li r0, 0xFF				# Clear random reroll flag for substages
 	stb r0, -0x7E(r12)		#
 	sth r7, -0x80(r12)		# Store stage ID
-	lhz r4, 2(r28)			#
-	sth r4, -0x46(r12)		# Store stage ASL ID
 	addi r3, r1, 0x90
 	lwz r4, -0x20(r12)		# "%s%s%02X%s"
 	lwz r5, -0x1C(r12)		# "/stage/"
@@ -551,20 +550,18 @@ Reload:
     ori     r22, r22, 0xF000
     lhz     r23, 4(r22)	       # Get the slot count
     mtctr   r23 				# / Mount the slot count
-    bne-    ClassicAllStar       # | Replays require different info
-    lhz     r17, -2(r28)      # |
-    cmplwi  r17, 0x83E4       # |
-    bne+    Multiplayer       #/
+    cmpwi 	r17, 0x52		  #\ Replays require different info
+   	bne+    Multiplayer       #/
 Replay:
-    lis     r16, 0x9130       #\  Ignore real inputs and only receive them from the replay info.
-    lhz     r16, 0x1F4A(r16)  # | Replays insert them into 91301F4A
-																	  
-    sth     r16, 2(r28)       #/
+    li r3, 11					# \
+	bla 0x0249CC				# / Get replay heap offset
+	lhz 	r16, 0x44A(r3)		# \ Get Replay ASL value	
+	sth     r16, 2(r28)       	# /
+	li		r0, 0xFF			# r0 was overwritten, but we still need it!
     b FindParam
 Multiplayer:
-ClassicAllStar:
     lis r29, CodeMenuStart                  # \
-    lwz r29, CodeMenuRandom1To1Option(r29)  # / Load code menu option
+    lbz r29, CodeMenuRandom1To1Option(r29)  # / Load code menu option
     cmpwi r29, 0x1
     bne FindParam      # If Random1To1 is toggled on then randomize param, otherwise find param based on input
     cmpwi r23, Random1To1AltsStartIndex       # Ensure ASL file has more slots than the start index
@@ -614,11 +611,9 @@ slotFound:
     beq DoNotSaveASL
     addi r23, r22, 8		# \ Get to the list of inputs and title offsets
     lhzx r25, r23, r29      # /
-    sth r25, 2(r28)         # Store in alt stage helper ASL loc
-    lis r11, 0x815F         # \ Store in ALT_STAGE_VAL_LOC
-    sth r25, -0x7BDE(r11)   # /
-    lis r11, 0x9135         # \ Store in CURRENT_ALT_STAGE_INFO_LOC
-    stw r25, -0x3700(r11)   # /
+    li r3, 11					# \
+	bla 0x0249CC				# / Get replay heap offset
+	sth r25, 0x44A(r3)
 DoNotSaveASL:
 	addi r29, r29, 0xA		# \ pass the 8-byte header and add 2 to get the offset instead of input
 	lhzx r29, r22, r29		# /
