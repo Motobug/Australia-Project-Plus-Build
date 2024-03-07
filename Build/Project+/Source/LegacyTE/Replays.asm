@@ -1,5 +1,5 @@
 ################################################################################
-PM Replay Fix V2.1 [Fracture, Stage Reload Fix by Kapedani, Recode by DukeItOut]
+PM Replay Fix V2.3 [Fracture, Stage Reload Fix by Kapedani, Recode by DukeItOut]
 #
 # 1.1: 
 # Updated to account for ASL
@@ -17,7 +17,19 @@ PM Replay Fix V2.1 [Fracture, Stage Reload Fix by Kapedani, Recode by DukeItOut]
 # 2.1:
 # Fixed issue where controllers in unexpected arrangements could influence 
 # Wiimotes or CPUs
-################################################################################
+#
+# 2.1b:
+# Adjusted based on an oversight where player slots were always assumed to be in
+# a specific order
+#
+# 2.2:
+# Fixed issue where sharing stocks was never recognized during a replay
+#
+# 2.3:
+# Handled oversight in custom replay system that misinterpreted a special command
+# as a command size instead, causing cinematic freezes to skip over copious
+# amounts of bytes in the replay.
+######################################################################################
 HOOK @ $8004BB04
 {
 	li r3, 11				# \
@@ -116,8 +128,15 @@ HOOK @ $80764F18
 	stw r31, 0x00(r12) # |
 	stw r31, 0x04(r12) # | Reset replay values so that they can't be uninitialized
 	stb r31, 0x08(r12) # /
+	
+  addi r4, r28, 0x42    # \
+  lis r3, 0x80B9        # | Check if a CPU
+  lwz r3, -0x5D28(r3)   # |
+  bla 0x8FC8A4          # |
+  cmpwi r3, 0           # |
+  beq is_CPU            # /
   
-  lhz r31, 0x2E(r28) # Which player slot this is.
+  lbz r31, 0x42(r28) # Which player slot this is.
   lis r30, 0x805B;  ori r30, r30, 0xC068	# Something related to the Code Menu?
   rlwinm r31, r31, 2, 28, 29		# was previously rlwinm r31, r31, 2, 0, 1, which broke it
   add r31, r31, r30
@@ -125,6 +144,7 @@ HOOK @ $80764F18
   stw r30, 0(r12)
 
 loc_0xA0:
+is_CPU:
   lwz r31, 0x78(r27)
   sth r31, 0x04(r12)
   
@@ -153,7 +173,7 @@ loc_0xA0:
   stb r30, 7(r12)
   lwz r30, -0x5C(r31)		# LA-Basic[77]
   stb r30, 8(r12)
-is_CPU:   
+   
   # r12 = address at 9134C954 + offset pointed to by 9134C90C
   # (word) 0x0(r12) = Button Inputs (half) + Control X (byte) + Control Y (byte)
   # (half) 0x4(r12) = Previous Button Inputs
@@ -325,9 +345,32 @@ HOOK @ $8004BE50
   lwz r8, 0x12A4(r8)
   or. r3, r3, r8;  beq- %END%	# Skip if this is in a replay viewing or not frame 0.
   lbz r4, 1(r6)
+  cmpwi r4, 0x80		# Typically if frozen for a cinematic this is 0x80, 
+  bne %END%				# but this will mess up calculations! We don't want that!
+  li r4, 5				# Frozen gameplay uses 5 bytes to calculate!
+						# For Fracture replay info, non-frozen is typically 4+2*playercount
   
   # Normally the operation here is add r4, r4, r3. Why is it not included?
 }
+
+# Used for share stock during team battles
+HOOK @ $80958558
+{
+	lhz r0, 0x8(r1)			# Original operation. Gets button inputs
+	lis r12, 0x805C;  lwz r12, -0x4040(r12);  cmpwi r12, 0x1;  bne- %END%
+  # 2 = Battles
+  # 1 = Replay (we need to make sure that the replay uses the information correctly)
+	li r3, 11				# \
+	bla 0x0249CC			# / Get replay heap offset
+	lwz r3, 0x8(r3)			# Get end of replay heap
+	subi r4, r3, 0x2AC 	# previously 9134C954
+	lwz r5, -0x23C(r3) 	# previously 9134C9C4
+	rlwinm r5, r5, 3, 1, 0
+	add r3, r4, r5
+	lhz r0, 0(r3)		# Get normal button info
+}
+
+# Used for reading replay info
 HOOK @ $8091319C
 {  
 # PRESERVE  
@@ -345,6 +388,12 @@ HOOK @ $8091319C
 
   
   lis r12, 0x805C;  lwz r12, -0x4040(r12);  cmpwi r12, 0x1;  bne- loc_0x220
+  
+	lis r3, 0x805A			# \
+	lwz r3, 0x60(r3)		# |
+	lwz r3, 4(r3)			# | Force replays to check for share stock a frame earlier
+	lwz r3, 0x54(r3)		# | than normal
+	bla 0x9583EC			# /
   
 	li r3, 11				# \
 	bla 0x0249CC			# / Get replay heap offset
@@ -491,19 +540,15 @@ loc_0x220:
   lwz r12, 0(r20)	# Original operation
 }
 
-HOOK @ $8004B1D4
-{
-  	li r11, 0x52			    # \ Added writing R to P+'s stage system to signify load stage
-	lis r12, 0x8054 	    # |
-	stb r11, -0xFFD(r12)  # / 8053F003 
-  	lhz r0, 0xEE3(r3)
-}
-
 HOOK @ $8004ACC8
 {
 	li r3, 0
 	lis r12, 0x805C
 	stw r3, -0x75F8(r12) # 805B8A08
+	li r3, 0x21			# \ Added writing ! to P+'s stage system to signify load stage
+	lis r12, 0x8054 	# |
+	stb r3, -0xFFD(r12) # / 8053F003 
+
 	mr r3, r0		# Original operation
 }
 HOOK @ $80764E88

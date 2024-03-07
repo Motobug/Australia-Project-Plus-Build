@@ -1437,7 +1437,7 @@ Pirate_Ship_L.param
 ################
 Pirate_Ship_R.param
 
-	STGPIRATESHIP_R_ANCIENTCASTLE.pac
+	STGPIRATESHIP_R_YI_ANCIENTCASTLE.pac
 	st_final.rel
 	Pirate_Ship.tlst
 
@@ -2147,7 +2147,7 @@ Venus_Lighthouse_L.param
 ################
 Venus_Lighthouse_R.param
 
-	STGVENUSLIGHTHOUSE_R_WL_VENUS.pac
+	STGVENUSLIGHTHOUSE_R_YI_VENUS.pac
 	st_final.rel
 	Venus_Lighthouse.tlst
 

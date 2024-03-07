@@ -119,6 +119,11 @@ Memory Extension for CSS/SSS MenuResource (+0.88MB) [DukeItOut]
 ###############################################################
 int 0x73EA00 @ $80422384
 
+############################################
+STGRESULT.PAC expansion (+3.5MB) [DukeItOut]
+############################################
+int 0x64CE00 @ $80422334
+
 #.include Source/Project+/MemoryLayout.asm # Disabled due to incompatibility with the current Code Menu. Included for referential purposes.
 						# When re-enabled, remove the two memory extension codes right above this .include line!
 						# asm file will be fine-tuned when fully implemented to fix oversights within it.
@@ -588,10 +593,44 @@ Effect.pac Roster Expansion System (RSBE.Ver) V2 (Costume-Specific Etc File Supp
 * 80E40014 00000000
 * E0000000 80008000
 
-##########################################
-Sword Trail Hitlag fix [MarioDox]
-##########################################
-op nop @ $800659f4 #pauseGroup/[ecTraceMgr]
+
+###############################################
+Sword Trail Hitlag fix V2 [MarioDox,DukeItOut]
+###############################################
+# Makes it so trail effects will stop
+# alongside the object that created them
+# like in other Smash Bros. games.
+#
+# V2: Fixed issue where certain trails
+# actually don't want to have hitstop.
+#
+# R.O.B.'s laser is the only example where this 
+# is currently desired to have an exception.
+###############################################
+HOOK @ $800656A8
+{
+	mr r4, r3 			# Original operation
+	stw r21, 0x98(r3)	# Trace ID for future reference	(normally a trace is a size of 0x84.)
+						# (We're abusing allocation logic that makes it instead reserve 0xA0!)
+}
+HOOK @ $80065750
+{
+	mr r4, r3			# Original operation 
+	stw r21, 0x98(r3)	# Trace ID for future reference (though this is for when no texture is found!)
+}
+HOOK @ $800659F0
+{
+	cmplw r29, r0		# Original operation
+	beq- %END%			# If it was already going to not branch then don't read below!
+	lwz r3, 0x98(r31)	# Custom Trace ID variable
+	cmplwi cr1, r3, 0xC;	blt+ cr1, ForcePause	# \ normal R.O.B. laser traces
+	cmplwi cr1, r3, 0xD;	ble- cr1, %END%			# /
+	cmplwi cr1, r3, 0x1EB;	blt- cr1, ForcePause	# \ ef_custom23 (R.O.B.)
+	cmplwi cr1, r3, 0x1F4;  ble- cr1, %END%			# / 
+ForcePause:
+	crnot 2, 2			# inverts the "bne" determination from the first operation comparison
+						# so that it won't branch away from pausing
+}
 
 #########################################################
 Solid Trail ID Specifier [MarioDox, DukeItOut]
@@ -2308,6 +2347,7 @@ HOOK @ $807A3E20
 * 80020000 B8610010
 * 80210000 7C0803A6
 * 60000000 00000000
+
 
 ####################################################################################
 [Legacy TE] CSS keeps character choice for inactive ports between matches [Fracture]
