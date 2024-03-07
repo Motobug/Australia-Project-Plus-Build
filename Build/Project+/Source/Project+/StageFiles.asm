@@ -482,7 +482,7 @@ Custom Stage SD File Loader [DukeItOut, Random Alts by Kapedani]
 # Prerequisite: Stage ID in r3 (retrieves input, itself)
 ########################################################
 	.alias CodeMenuStart = 0x804E
-	.alias CodeMenuRandom1To1Option = 0x09DB
+	.alias CodeMenuRandom1To1Option = 0x0A23
     .alias Random1To1AltsStartIndex = 16
 CODE @ $8053E000
 {
