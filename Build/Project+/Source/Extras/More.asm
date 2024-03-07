@@ -7,25 +7,12 @@
 
 
 ############################################################################
-Set random stagelist based on Code Menu Stagelist setting (Combined) [Moto]
-############################################################################
-* 20523400 00000000 # If Code Menu stagelist is set to 0
-* 20523310 00000000 # If 80523310 is 00000000
-* 04523310 DEADBEEF # Set it to DEADBEEF
-* 04523320 00000000 # Set all other values to 00000000
-* 04523330 00000000
-* 42000000 90000000 #Set base address to 90000000
-* 0417BE74 54600D05 # Brawl stages
-* 0417BE70 00021000 # Melee stages
-* E0000000 80008000
-
-############################################################################
 Set random stagelist based on Code Menu Stagelist setting (Singles) [Moto]
 ############################################################################
-* 20523400 00000001 # If Code Menu stagelist is set to 1
-* 20523320 00000000 # If 80523330 is 00000000
-* 04523320 DEADBEEF # Set it to DEADBEEF
-* 04523310 00000000 # Set all other values to 00000000
+* 20523400 00000000 # If Code Menu stagelist is set to 0
+* 20523310 00000000 # If 80523330 is 00000000
+* 04523310 DEADBEEF # Set it to DEADBEEF
+* 04523320 00000000 # Set all other values to 00000000
 * 04523330 00000000
 * 42000000 90000000 #Set base address to 90000000
 * 0417BE74 54200905 # Brawl stages
@@ -35,12 +22,25 @@ Set random stagelist based on Code Menu Stagelist setting (Singles) [Moto]
 ############################################################################
 Set random stagelist based on Code Menu Stagelist setting (Doubles) [Moto]
 ############################################################################
+* 20523400 00000001 # If Code Menu stagelist is set to 1
+* 20523320 00000000 # If 80523340 is 00000000
+* 04523320 DEADBEEF # Set it to DEADBEEF
+* 04523310 00000000 # Set all other values to 00000000
+* 04523330 00000000
+* 42000000 90000000 #Set base address to 90000000
+* 0417BE74 44400D05 # Brawl stages
+* 0417BE70 00021000 # Melee stages
+* E0000000 80008000
+
+############################################################################
+Set random stagelist based on Code Menu Stagelist setting (Combined) [Moto]
+############################################################################
 * 20523400 00000002 # If Code Menu stagelist is set to 2
-* 20523330 00000000 # If 80523340 is 00000000
+* 20523330 00000000 # If 80523310 is 00000000
 * 04523330 DEADBEEF # Set it to DEADBEEF
 * 04523310 00000000 # Set all other values to 00000000
 * 04523320 00000000
 * 42000000 90000000 #Set base address to 90000000
-* 0417BE74 44400D05 # Brawl stages
+* 0417BE74 54600D05 # Brawl stages
 * 0417BE70 00021000 # Melee stages
 * E0000000 80008000
