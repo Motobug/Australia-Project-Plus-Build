@@ -213,9 +213,9 @@ Enable Hanenbow in My Music [Desi]
 op NOP @ $806B1E80
 
 
-#########################################################################################################
-[Legacy TE] My Music track frequency button shortcuts V2.1 (TLST file support) [Fracture, DukeItOut, Eon]
-#########################################################################################################
+#################################################################################################################
+[Legacy TE] My Music track frequency button shortcuts V2.6 (TLST file support) [Fracture, DukeItOut, Eon, mawwwk]
+#################################################################################################################
 HOOK @ $8117E698
 {
   stw r0, -4(r1)
@@ -226,49 +226,64 @@ HOOK @ $8117E698
   stfd f0, -0x10(r1)
   stwu r1, -0x8C(r1)
   stmw r3, 8(r1)
-  li r28, 0x0
-  lis r29, 0x805B
+  
+  li r28, 0
+  lis r29, 0x805B		# For checking controller inputs
   ori r29, r29, 0xAD04
-  li r31, 0x0
-  cmpwi r31, 0x100
-  bge- loc_0x4C
+  li r31, 0
 
-loc_0x38:
+checkInput:
   lwzx r30, r29, r31
   or r28, r28, r30
   addi r31, r31, 0x40
   cmpwi r31, 0x100
-  blt+ loc_0x38
+  blt+ checkInput
 
-loc_0x4C:
-  lis r12, 0x8054		# 8053EF70 Holds last input when doing My Music
-  lwz r11, -0x1090(r12) #
+  lis r12, 0x8054		# 8053EF70 Holds last input when doing My Music,
+  lwz r11, -0x1090(r12) # as set in StageFiles.asm.
   and. r11, r28, r11	# Filter the shoulder buttons
   stw r11, -0x1090(r12)	#
-  bne skip				# Prevents them being sticky on selecting an L/R tracklist.
+  bne skip				# Prevents them being sticky on selecting an alt tracklist.
+	
+  lbz r11, -0x108C(r12)	# \
+  cmpwi r11, 0			# | Shortcut cooldown for L+R to make it easier to let go.
+  ble+ checkLR			# |
+  
+  subi r11, r11, 1		# | If this is not present, you could be a frame off in
+  stb r11, -0x108C(r12)	# | releasing and get the L or R shortcuts instead!
+  b skip				# /
 
+checkLR:
+  andi. r31, r28, 0x60;   cmpwi r31, 0x60;  bne- checkL
+  li r6, 6				# 6-frame leniency on L+R
+  stb r6, -0x108C(r12)	# 
+  li r6, 40				# If L and R are BOTH pressed, set frequency to 40
+  lis r29, 0x4270		# Store float(60) for bar animation
+  stw r29, -0x10(r1)
+  lfs f1, -0x10(r1)
+  b setValue
 
-  andi. r31, r28, 0x40;  beq- loc_0x68		# Check for L
-  li r6, 0x0
+checkL:
+  andi. r31, r28, 0x40;  beq- checkR
+  li r6, 0				# If L pressed, set frequency to 0
   lis r29, 0x42C8
   stw r29, -0x10(r1)
   lfs f1, -0x10(r1)
+  b setValue
 
-loc_0x68:
-  andi. r31, r28, 0x20;  beq- loc_0x84		# Check for R
-  li r6, 0x64
-  li r29, 0x0
+checkR:
+  andi. r31, r28, 0x20;  beq- finish
+  li r6, 100			# If R pressed, set frequency to 100
+  li r29, 0
   stw r29, -0x10(r1)
   lfs f1, -0x10(r1)
 
-loc_0x84:
-  andi. r30, r28, 0x60;  beq- loc_0xE0		# Check for L+R
+setValue:
   mr r29, r3
   lwz r4, 0x670(r3)
   lhz r3, 0x42(r3)
   rlwinm r3, r3, 2, 0, 29
-#Fixed to work with My Music System
-  mulli r3, r3, 4
+  mulli r3, r3, 4		# Fixed to work with My Music system
   lis r5, 0x8053
   ori r5, r5, 0xF20C
   add r5, r3, r5
@@ -289,7 +304,6 @@ loc_0x84:
   mtctr r0
   bctrl 
 
-loc_0xE0:
 skip:
 finish:
   lmw r3, 8(r1)
@@ -319,6 +333,22 @@ CODE @ $8117DEE8		# Makes the menu load a file to access its tracklist in My Mus
 Mushroomy Kingdom's slot only loads one tracklist [DukeItOut]
 #############################################################
 op b 0x174	@ $8117DF88
+
+###################################################
+Salty Runback Expansion Stage Music Fix [DukeItOut]
+###################################################
+# Fixes Salty Runback music not working 
+# appropriately with expansion stages due to 
+# higher values not being checked for music
+###################################################
+op NOP @ $8010F9C0
+
+################################################
+#Salty Runback Always Shuffles Music [DukeItOut]
+# 
+# Disabled on purpose, but left here for builds that want to make it shuffle.
+#
+#op b 0x68 @ $8010F9A8
 
 ##################################################################################
 Hanenbow can display song titles, but stage builder stages can't [JOJI, DukeItOut]
@@ -351,21 +381,74 @@ HOOK @ $8010F9DC
   li r27, 0x0
 }
 
-###############################################################################################################
-# Note that CMM SD File Saver isn't present here, that's by design! Netplay doesn't save tracklists on purpose!
-###############################################################################################################
+#############################################################################
+# Note that CMM SD File Saver isn’t present here, that’s by design! Netplay doesn’t save tracklists on purpose!
+!CMM SD File Saver (Uses SD Root Code’s Directory) [Desi, Fracture, DukeItOut]
+#############################################################################
+HOOK @ $8117E5C0
+{
+  stwu r1, -0xA0(r1)
+  lis r4, 0x8053;  ori r4, r4, 0xCFF8		# 
+  lwz r5, 0(r4)				# "sound/tracklist/"
+  lwz r4, 4(r4)				# "%s%s.tlst"	# "sound/tracklist/" + filename + ".tlst"
+  lis r12, 0x8053			# \
+  ori r12, r12, 0xF000		# | Get the tracklist file name
+  lwz r8, 0x18(r12)			# |
+  lwz r7, 0x4(r12)			# |
+  add r7, r7, r12			# |
+  add r6, r8, r7			# /
+  addi r3, r1, 0x40
+  lis r12, 0x803F			# \
+  ori r12, r12, 0x89FC		# | Create the filename string
+  mtctr r12					# |
+  bctrl						# /
+  # string at r3 + 0x24
+  addi r7, r1, 0x40		# Filename to write
+  stwu r1, -0x200(r1)
+  lis r4, 0x8048		# \
+  ori r4, r4, 0xEFF6	# / "%s%s%s%s"
+  lis r5, 0x8040		# \ Mod name
+  ori r5, r5, 0x6920	# /
+  lis r6, 0x7066		# \ "pf"
+  stw r6, 0x10(r1)		# |
+  addi r6, r1, 0x10		# /
+  addi r3, r1, 0x40
+  lis r12, 0x803F			# \
+  ori r12, r12, 0x89FC		# | Create the filename string
+  mtctr r12					# |
+  bctrl						# /
+  addi r3, r1, 0x10
+  li r5, 0
+  stw r5, 0x4(r3)
+  stw r5, 0x10(r3)
+  lis r4, 0x8053;  ori r4, r4, 0xF200		#\ File size and location to write
+  stw r4, 0xC(r3)							# | 
+  lhz r4, 0x8(r4)							#/
+  stw r4, 0x8(r3)
+  li  r4, -1
+  stw r4, 0x14(r3)
+  addi r4, r1, 0x40
+  stw r4, 0(r3)
+  lis r0, 0x8001		# \  
+  ori r0, r0, 0xD740	# |	write to file on SD card!
+  mtctr r0				# |
+  bctrl 				# /
+  lwz r1, 0(r1)
+  lwz r1, 0(r1)
+  li r26, 0x0
+}
 
 ##########################################################################################################
-MyMusic loads from 8053F200 instead of 81521F18 [Desi]
+MyMusic loads from 8053F200 instead of 81521F18 V1.1 [Desi, DukeItOut]
 #
 #The goal of each of these hook points is to make MyMusic read Song IDs from 8053F200 instead of 81521F18. 
 #By doing this, 8117E180 can be NOP and not overwrite the Song Count at 81521F54.
+#
+#1.1: Fixed issue where altering the My Music menu too extensively would break compatibility with this code
 ##########################################################################################################
 HOOK @ $8117E7B8
 {
-	lis r5, 0x8152
-	ori r5, r5, 0x1880
-	sub r3, r3, r5
+	sub r3, r3, r28
 	mulli r3, r3, 0x4
 	lis r5, 0x8053
 	ori r5, r5, 0xF20C
@@ -375,9 +458,7 @@ HOOK @ $8117E7B8
 
 HOOK @ $8117f0E0
 {
-	lis r29, 0x8152
-	ori r29, r29, 0x1880
-	subf r29, r28, r6
+	sub r29, r6, r28
 	mulli r29, r29, 0x4
 	lis r6, 0x8053
 	ori r6, r6, 0xF20C

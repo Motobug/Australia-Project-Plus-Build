@@ -146,7 +146,7 @@ loc_0x02E:
 	stw r7, -0x8000(r3)
 loc_0x071:
 	cmpwi r31, 0x4
-	bne loc_0x114
+	bne loc_0x117
 	lis r30, 0x805b
 	ori r30, r30, 0x6df8
 	lis r31, 0x3eb2
@@ -177,7 +177,7 @@ loc_0x071:
 	ori r4, r4, 0x7e44
 	stw r4, 0x0(r3)
 	lis r25, 0x804e
-	ori r25, r25, 0x7a4
+	ori r25, r25, 0x7b4
 	lis r29, 0xc348
 	lis r28, 0xc316
 	lwz r26, 0xc(r31)
@@ -234,8 +234,11 @@ loc_0x0BD:
 	addi r28, r31, 0x10
 	li r3, 0x1
 	cmpwi r3, 0x0
-	beq loc_0x113
+	beq loc_0x116
 loc_0x0C6:
+	lbz r26, 0x3(r28)
+	andi. r26, r26, 0x2
+	bne loc_0x112
 	lbz r26, 0x2(r28)
 	lbz r27, 0x4(r28)
 	lwzx r27, r25, r27
@@ -246,7 +249,7 @@ loc_0x0C6:
 	lhz r4, 0x5(r28)
 	add r4, r4, r28
 	cmpwi r26, 0x5
-	bne loc_0x0DF
+	bne loc_0x0E2
 	lwz r27, 0xc(r28)
 	lhz r26, 0x0(r28)
 	mulli r27, r27, 0x4
@@ -260,10 +263,10 @@ loc_0x0C6:
 	ori r0, r0, 0x89fc
 	mtctr r0
 	bctrl
-	b loc_0x0F9
-loc_0x0DF:
+	b loc_0x0FC
+loc_0x0E2:
 	cmpwi r26, 0x2
-	bne loc_0x0EA
+	bne loc_0x0ED
 	lfs f1, 0x8(r28)
 	lis r3, 0x804e
 	ori r3, r3, 0x648
@@ -272,17 +275,17 @@ loc_0x0DF:
 	ori r0, r0, 0x89fc
 	mtctr r0
 	bctrl
-	b loc_0x0F9
-loc_0x0EA:
+	b loc_0x0FC
+loc_0x0ED:
 	lwz r5, 0x8(r28)
 	cmpwi r26, 0x0
-	bne loc_0x0F2
+	bne loc_0x0F5
 	lwz r26, 0x18(r28)
 	addi r27, r26, 0x1c
 	rlwinm r5, r5, 2, 0, 31         # (Mask: 0xffffffff)
 	lhzx r5, r27, r5
 	add r5, r5, r26
-loc_0x0F2:
+loc_0x0F5:
 	lis r3, 0x804e
 	ori r3, r3, 0x648
 	crxor 6, 6, 6
@@ -290,13 +293,13 @@ loc_0x0F2:
 	ori r0, r0, 0x89fc
 	mtctr r0
 	bctrl
-loc_0x0F9:
+loc_0x0FC:
 	mr r26, r3
 	lis r27, 0x804e
 	ori r27, r27, 0x647
 	cmpwi r26, 0x0
-	ble loc_0x107
-loc_0x0FE:
+	ble loc_0x10A
+loc_0x101:
 	lbzu r4, 0x1(r27)
 	addi r3, r30, 0x0
 	lis r0, 0x8006
@@ -305,8 +308,8 @@ loc_0x0FE:
 	bctrl
 	subi r26, r26, 0x1
 	cmpwi r26, 0x0
-	bgt+ loc_0x0FE
-loc_0x107:
+	bgt+ loc_0x101
+loc_0x10A:
 	lis r3, 0xc348
 	lfs f0, 0x30(r30)
 	lis r4, 0x4190
@@ -315,15 +318,16 @@ loc_0x107:
 	fadd f0, f0, f1
 	stw r3, 0x2c(r30)
 	stfs f0, 0x30(r30)
+loc_0x112:
 	lhz r3, 0x0(r28)
 	lhzux r3, r28, r3
 	cmpwi r3, 0x0
 	bne+ loc_0x0C6
-loc_0x113:
-	b loc_0x193
-loc_0x114:
+loc_0x116:
+	b loc_0x196
+loc_0x117:
 	cmpwi r30, 0x0
-	beq loc_0x12A
+	beq loc_0x12D
 	lis r29, 0x805b
 	ori r29, r29, 0x6df8
 	li r31, 0x0
@@ -343,16 +347,16 @@ loc_0x114:
 	lis r4, 0x804e
 	ori r4, r4, 0x298
 	stw r3, 0x0(r4)
-	b loc_0x193
-loc_0x12A:
+	b loc_0x196
+loc_0x12D:
 	lis r0, 0x8002
 	ori r0, r0, 0xe844
 	mtctr r0
 	bctrl
 	lis r31, 0x804e
-	lwz r31, 0xee8(r31)
+	lwz r31, 0xf08(r31)
 	cmpwi r31, 0x1
-	bne loc_0x193
+	bne loc_0x196
 	li r31, 0x0
 	lwz r23, -0x42ac(r13)
 	lwz r22, -0x42a8(r13)
@@ -427,14 +431,14 @@ loc_0x12A:
 	lis r28, 0x805a
 	lhz r28, 0x856(r28)
 	cmpwi r30, 0x3c
-	bge loc_0x180
+	bge loc_0x183
 	lis r30, 0xff00
 	ori r30, r30, 0xff
-	b loc_0x182
-loc_0x180:
+	b loc_0x185
+loc_0x183:
 	lis r30, 0x66
 	ori r30, r30, 0xffff
-loc_0x182:
+loc_0x185:
 	stw r30, 0x8(r29)
 	stw r30, 0xc(r29)
 	stw r30, 0x10(r29)
@@ -442,8 +446,8 @@ loc_0x182:
 	stw r23, -0x42ac(r13)
 	stw r22, -0x42a8(r13)
 	cmpwi r26, 0x0
-	ble loc_0x193
-loc_0x18A:
+	ble loc_0x196
+loc_0x18D:
 	lbzu r4, 0x1(r31)
 	addi r3, r29, 0x0
 	lis r0, 0x8006
@@ -452,8 +456,8 @@ loc_0x18A:
 	bctrl
 	subi r26, r26, 0x1
 	cmpwi r26, 0x0
-	bgt+ loc_0x18A
-loc_0x193:
+	bgt+ loc_0x18D
+loc_0x196:
 	lmw r3, 0x8(r1)
 	addi r1, r1, 0xf4
 	lfd f0, -0x10(r1)
@@ -475,7 +479,6 @@ loc_0x193:
 	lwz r0, 0x4(r1)
 	mtlr r0
 	lwz r0, -0x4(r1)
-	nop
 }
 
 ####################
@@ -617,7 +620,7 @@ loc_0x047:
 	li r3, 0x0
 	stb r3, 0x0(r31)
 	lis r3, 0x804e
-	ori r3, r3, 0x12e4
+	ori r3, r3, 0x1400
 	subi r4, r25, 0x1
 	stw r4, 0x0(r3)
 	addi r25, r25, 0x18
@@ -667,7 +670,7 @@ loc_0x075:
 	li r3, 0x0
 	stb r3, 0x0(r31)
 	lis r3, 0x804e
-	ori r3, r3, 0x1490
+	ori r3, r3, 0x1660
 	subi r4, r25, 0x1
 	stw r4, 0x0(r3)
 	addi r25, r25, 0x18
@@ -717,7 +720,7 @@ loc_0x0A3:
 	li r3, 0x0
 	stb r3, 0x0(r31)
 	lis r3, 0x804e
-	ori r3, r3, 0x163c
+	ori r3, r3, 0x18c0
 	subi r4, r25, 0x1
 	stw r4, 0x0(r3)
 	addi r25, r25, 0x18
@@ -767,17 +770,17 @@ loc_0x0D1:
 	li r3, 0x0
 	stb r3, 0x0(r31)
 	lis r3, 0x804e
-	ori r3, r3, 0x17e8
+	ori r3, r3, 0x1b20
 	subi r4, r25, 0x1
 	stw r4, 0x0(r3)
 	addi r25, r25, 0x18
 	lis r31, 0x804e
 	lwz r28, 0x4(r31)
-	addi r31, r31, 0x7dc
+	addi r31, r31, 0x7d4
 	cmplw r31, r28
 	bne loc_0x596
 	lis r28, 0x804e
-	lwz r28, 0xf24(r28)
+	lwz r28, 0xf38(r28)
 	cmpwi r28, 0x0
 	bne loc_0x0EE
 	lis r28, 0x804e
@@ -932,7 +935,7 @@ loc_0x163:
 	cmpwi r30, 0x1
 	bne loc_0x170
 	lis r30, 0x804e
-	lwz r30, 0xc50(r30)
+	lwz r30, 0xc74(r30)
 	cmpwi r30, 0x0
 	beq loc_0x170
 	lis r30, 0x804e
@@ -1379,7 +1382,7 @@ loc_0x2E2:
 	stw r12, 0x0(r6)
 loc_0x2E9:
 	lhz r3, 0x0(r9)
-	add r9, r9, r3
+	lhzux r3, r9, r3
 	cmpwi r3, 0x0
 	bne+ loc_0x2D2
 loc_0x2ED:
@@ -1480,7 +1483,7 @@ loc_0x33F:
 	cmpwi r30, 0x1
 	bne loc_0x34C
 	lis r30, 0x804e
-	lwz r30, 0xc50(r30)
+	lwz r30, 0xc74(r30)
 	cmpwi r30, 0x1
 	bne loc_0x34C
 	lis r30, 0x804e
@@ -1546,27 +1549,27 @@ loc_0x375:
 	bne+ loc_0x375
 loc_0x37B:
 	lis r31, 0x804e
-	lwz r31, 0xd50(r31)
+	lwz r31, 0xda8(r31)
 	lis r30, 0x8058
 	ori r30, r30, 0x3fff
 	stb r31, 0x0(r30)
 	lis r31, 0x804e
-	lwz r31, 0xd8c(r31)
+	lwz r31, 0xdd4(r31)
 	lis r30, 0x8058
 	ori r30, r30, 0x3ffd
 	stb r31, 0x0(r30)
 	lis r31, 0x804e
-	lwz r31, 0xe20(r31)
+	lwz r31, 0xe58(r31)
 	lis r30, 0x8058
 	ori r30, r30, 0x3ff9
 	stb r31, 0x0(r30)
 	lis r31, 0x804e
-	lwz r31, 0xddc(r31)
+	lwz r31, 0xe24(r31)
 	lis r30, 0x8058
 	ori r30, r30, 0x3ff7
 	stb r31, 0x0(r30)
 	lis r31, 0x804e
-	lwz r31, 0xe74(r31)
+	lwz r31, 0xeac(r31)
 	lis r30, 0x8058
 	ori r30, r30, 0x3ffb
 	stb r31, 0x0(r30)
@@ -1576,15 +1579,15 @@ loc_0x394:
 	cmpwi r19, 0x3
 	bne loc_0x3DB
 	lis r31, 0x804e
-	lwz r31, 0xc50(r31)
+	lwz r31, 0xc74(r31)
 	cmpwi r31, 0x2
 	bne loc_0x3DB
 	lis r25, 0x804e
-	ori r25, r25, 0xc48
+	ori r25, r25, 0xc6c
 	lis r24, 0x804e
-	ori r24, r24, 0xa74
+	ori r24, r24, 0xaa8
 	lis r23, 0x804e
-	ori r23, r23, 0xa2c
+	ori r23, r23, 0xa6c
 	lwz r8, 0x8(r25)
 	lbz r9, 0x4(r25)
 	lwz r4, 0x8(r24)
@@ -1636,7 +1639,7 @@ loc_0x3C9:
 	stw r26, 0x0(r31)
 loc_0x3D0:
 	lhz r3, 0x0(r29)
-	add r29, r29, r3
+	lhzux r3, r29, r3
 	cmpwi r3, 0x0
 	bne+ loc_0x3B9
 loc_0x3D4:
@@ -1799,7 +1802,7 @@ loc_0x461:
 	stw r29, 0x0(r30)
 loc_0x468:
 	lis r31, 0x804e
-	lwz r31, 0xa7c(r31)
+	lwz r31, 0xab0(r31)
 	cmpwi r31, 0x1
 	beq loc_0x46E
 	li r31, 0x0
@@ -1808,7 +1811,7 @@ loc_0x46E:
 	cmpwi r19, 0x3
 	bne loc_0x561
 	lis r30, 0x804e
-	ori r30, r30, 0xab8
+	ori r30, r30, 0xadc
 	lwz r31, 0x8(r30)
 	cmpwi r31, 0x1
 	bne loc_0x561
@@ -1892,7 +1895,7 @@ loc_0x46E:
 	mtctr r0
 	bctrl
 	lis r4, 0x804e
-	lwz r4, 0x7d4(r4)
+	lwz r4, 0x7cc(r4)
 	addi r4, r4, 0x100
 	lis r0, 0x8015
 	ori r0, r0, 0x2c4c
@@ -2138,7 +2141,7 @@ loc_0x596:
 HOOK @ $809580B4                # Address = $(ba + 0x009580B4)
 {
 	lis r4, 0x804e
-	lwz r4, 0x90c(r4)
+	lwz r4, 0x94c(r4)
 	cmpwi r4, 0x2
 	blt loc_0x005
 	blr
@@ -2162,7 +2165,7 @@ HOOK @ $809489EC                # Address = $(ba + 0x009489EC)
 	lis r25, 0xffff
 	ori r25, r25, 0xffff
 	lis r31, 0x804e
-	lwz r31, 0x90c(r31)
+	lwz r31, 0x94c(r31)
 	cmpwi r31, 0x2
 	blt loc_0x02E
 	lis r31, 0x804e
@@ -2723,82 +2726,66 @@ loc_0x0BC:
 	nop
 }
 
-##################################
-[CM: Code Menu] Constant Overrides
-##################################
+################################################################
+[CM: Code Menu] Constant Overrides + Incr. PSCC RGB Strobe Float
+################################################################
 HOOK @ $80023D60                # Address = $(ba + 0x00023D60)
 {
 	lis r4, 0x804e
-	lwz r4, 0x1994(r4)
+	lwz r11, 0x1e20(r4)
 	lis r5, 0x80b8
-	ori r5, r5, 0x7aa8
-	stw r4, 0x0(r5)
-	lis r4, 0x804e
-	lwz r4, 0x19d0(r4)
-	lis r5, 0x80b8
-	ori r5, r5, 0x7aec
-	stw r4, 0x0(r5)
-	lis r4, 0x804e
-	lwz r4, 0x1a0c(r4)
-	lis r5, 0x80b8
-	ori r5, r5, 0x7ae8
-	stw r4, 0x0(r5)
-	lis r4, 0x804e
-	lwz r4, 0x1a44(r4)
-	lis r5, 0x80b8
-	ori r5, r5, 0x7b10
-	stw r4, 0x0(r5)
-	lis r4, 0x804e
-	lwz r4, 0x1a88(r4)
-	lis r5, 0x80b8
-	ori r5, r5, 0x8354
-	stw r4, 0x0(r5)
-	lis r4, 0x804e
-	lwz r4, 0x1abc(r4)
-	lis r5, 0x80b8
-	ori r5, r5, 0x8358
-	stw r4, 0x0(r5)
-	lis r4, 0x804e
-	lwz r4, 0x1af4(r4)
-	lis r5, 0x80b8
-	ori r5, r5, 0x8420
-	stw r4, 0x0(r5)
-	lis r4, 0x804e
-	lwz r4, 0x1b3c(r4)
-	lis r5, 0x80b8
-	ori r5, r5, 0x8444
-	stw r4, 0x0(r5)
-	lis r4, 0x804e
-	lwz r4, 0x1b80(r4)
-	lis r5, 0x80b8
-	ori r5, r5, 0x845c
-	stw r4, 0x0(r5)
-	lis r4, 0x804e
-	lwz r4, 0x1bc0(r4)
-	lis r5, 0x80b8
-	ori r5, r5, 0x8460
-	stw r4, 0x0(r5)
-	lis r4, 0x804e
-	lwz r4, 0x1bfc(r4)
-	lis r5, 0x80b8
-	ori r5, r5, 0x8478
-	stw r4, 0x0(r5)
-	lis r4, 0x804e
-	lwz r4, 0x1c3c(r4)
-	lis r5, 0x80b8
-	ori r5, r5, 0x8484
-	stw r4, 0x0(r5)
-	lis r4, 0x804e
-	lwz r4, 0x1c7c(r4)
-	lis r5, 0x80b8
-	ori r5, r5, 0x8510
-	stw r4, 0x0(r5)
-	lis r4, 0x804e
-	lwz r4, 0x1cc4(r4)
-	lis r5, 0x80b8
-	ori r5, r5, 0x8534
-	stw r4, 0x0(r5)
+	stw r11, 0x7aa8(r5)
+	lwz r11, 0x1e5c(r4)
+	stw r11, 0x7aec(r5)
+	lwz r11, 0x1e98(r4)
+	stw r11, 0x7ae8(r5)
+	lwz r11, 0x1ed0(r4)
+	stw r11, 0x7b10(r5)
+	lwz r11, 0x1f14(r4)
+	lis r5, 0x80b9
+	stw r11, -0x7cac(r5)
+	lwz r11, 0x1f48(r4)
+	stw r11, -0x7ca8(r5)
+	lwz r11, 0x1f80(r4)
+	stw r11, -0x7be0(r5)
+	lwz r11, 0x1fc8(r4)
+	stw r11, -0x7bbc(r5)
+	lwz r11, 0x200c(r4)
+	stw r11, -0x7ba4(r5)
+	lwz r11, 0x204c(r4)
+	stw r11, -0x7ba0(r5)
+	lwz r11, 0x2088(r4)
+	stw r11, -0x7b88(r5)
+	lwz r11, 0x20c8(r4)
+	stw r11, -0x7b7c(r5)
+	lwz r11, 0x2108(r4)
+	stw r11, -0x7af0(r5)
+	lwz r11, 0x2150(r4)
+	stw r11, -0x7acc(r5)
+	lwz r11, 0x8fc(r4)
+	lis r5, 0x8052
+	stw r11, 0x3400(r5)
+	lwz r5, 0x4(r4)
+	addi r11, r4, 0x7d4
+	cmplw r11, r5
+	bne loc_0x033
+	lwz r11, 0x308(r4)
+	lfs f13, 0x90(r11)
+	lis r5, 0x3c36
+	stw r5, 0x1c(r4)
+	lfs f12, 0x1c(r4)
+	fadds f13, f13, f12
+	lis r5, 0x40c0
+	stw r5, 0x1c(r4)
+	lfs f12, 0x1c(r4)
+	fcmpu cr1, f13, f12
+	blt cr1, loc_0x032
+	fsub f13, f13, f13
+loc_0x032:
+	stfs f13, 0x90(r11)
+loc_0x033:
 	cmpwi r0, 0x0
+	nop
 }
 
 ######################
@@ -2817,7 +2804,7 @@ HOOK @ $807C1A20                # Address = $(ba + 0x007C1A20)
 	stwu r1, -0x9c(r1)
 	stmw r3, 0x8(r1)
 	lis r31, 0x804e
-	lwz r31, 0x1f34(r31)
+	lwz r31, 0x23b0(r31)
 	cmpwi r31, 0x1
 	bne loc_0x03D
 	lwz r27, 0xd8(r27)
@@ -2833,12 +2820,12 @@ HOOK @ $807C1A20                # Address = $(ba + 0x007C1A20)
 	lwz r31, 0x64(r26)
 	lfs f2, 0x8(r31)
 	lis r30, 0x804e
-	ori r30, r30, 0x201c
+	ori r30, r30, 0x248c
 	lfs f0, 0x8(r30)
 	fmuls f1, f1, f0
 	fadds f1, f1, f2
 	lis r30, 0x804e
-	ori r30, r30, 0x1f68
+	ori r30, r30, 0x23d8
 	lfs f2, 0x8(r30)
 	fneg f0, f2
 	fcmpu cr0, f1, f0
@@ -2854,12 +2841,12 @@ loc_0x029:
 	lwz r31, 0x58(r26)
 	lfs f2, 0xc(r31)
 	lis r30, 0x804e
-	ori r30, r30, 0x205c
+	ori r30, r30, 0x24cc
 	lfs f0, 0x8(r30)
 	fmuls f1, f1, f0
 	fadds f1, f1, f2
 	lis r30, 0x804e
-	ori r30, r30, 0x1fa4
+	ori r30, r30, 0x2414
 	lfs f2, 0x8(r30)
 	fneg f0, f2
 	fcmpu cr0, f1, f0
@@ -2892,7 +2879,7 @@ loc_0x03D:
 HOOK @ $8083ADE0                # Address = $(ba + 0x0083ADE0)
 {
 	lis r4, 0x804e
-	lwz r4, 0x1f34(r4)
+	lwz r4, 0x23b0(r4)
 	cmpwi r4, 0x1
 	bne loc_0x028
 	cmpwi r3, -0x1
@@ -2949,7 +2936,7 @@ HOOK @ $8010F990                # Address = $(ba + 0x0010F990)
 	stwu r1, -0x84(r1)
 	stmw r3, 0x8(r1)
 	lis r3, 0x804e
-	lwz r3, 0x9e0(r3)
+	lwz r3, 0xa20(r3)
 	cmpwi r3, 0x2
 	bne loc_0x013
 	li r3, 0x0
@@ -3031,7 +3018,7 @@ HOOK @ $8081AD54                # Address = $(ba + 0x0081AD54)
 	stwu r1, -0x84(r1)
 	stmw r3, 0x8(r1)
 	lis r31, 0x804e
-	lwz r31, 0xc10(r31)
+	lwz r31, 0xc44(r31)
 	cmpwi r31, 0x0
 	bne loc_0x014
 	lmw r3, 0x8(r1)
@@ -3061,7 +3048,7 @@ loc_0x014:
 HOOK @ $808E00A4                # Address = $(ba + 0x008E00A4)
 {
 	lis r6, 0x804e
-	lwz r6, 0x1d00(r6)
+	lwz r6, 0x218c(r6)
 	cmpwi r6, 0x1
 	bne loc_0x005
 	li r0, 0x8
@@ -3096,7 +3083,7 @@ loc_0x009:
 	lis r3, 0x804e
 	lwz r3, 0x13c(r3)
 	lis r4, 0x804e
-	lwz r4, 0x7d4(r4)
+	lwz r4, 0x7cc(r4)
 	stw r3, 0x454(r4)
 loc_0x010:
 	blr
@@ -3128,7 +3115,7 @@ loc_0x010:
 	cmpwi r31, 0x6
 	bne loc_0x019
 	lis r31, 0x804e
-	lwz r31, 0x7d4(r31)
+	lwz r31, 0x7cc(r31)
 	lwz r31, 0x454(r31)
 	lis r30, 0x804e
 	ori r30, r30, 0x13c
@@ -3136,7 +3123,7 @@ loc_0x010:
 	b loc_0x051
 loc_0x019:
 	lis r31, 0x804e
-	lwz r31, 0x90c(r31)
+	lwz r31, 0x94c(r31)
 	cmpwi r31, 0x1
 	blt loc_0x04D
 	lis r14, 0x9018
@@ -3226,7 +3213,7 @@ loc_0x051:
 	li r31, 0x0
 	stw r31, 0x0(r30)
 	lis r31, 0x804e
-	lwz r31, 0x988(r31)
+	lwz r31, 0x9c8(r31)
 	cmpwi r31, 0x0
 	bne loc_0x0BB
 	lis r30, 0x805a
@@ -3374,7 +3361,7 @@ loc_0x011:
 	cmpwi r31, 0xa
 	bne loc_0x0A4
 	lis r31, 0x804e
-	lwz r31, 0x90c(r31)
+	lwz r31, 0x94c(r31)
 	cmpwi r31, 0x4
 	bne loc_0x02F
 	li r30, 0x0
@@ -3457,7 +3444,7 @@ loc_0x036:
 	bctrl
 	neg r16, r3
 	lis r31, 0x804e
-	lwz r31, 0x90c(r31)
+	lwz r31, 0x94c(r31)
 	cmpwi r31, 0x2
 	bne loc_0x06A
 	stb r16, 0x0(r18)
@@ -3617,14 +3604,14 @@ loc_0x037:
 	lis r29, 0x8058
 	lwzu r28, 0x4084(r29)
 	lis r31, 0x804e
-	lwz r31, 0xa34(r31)
+	lwz r31, 0xa74(r31)
 	cmpwi r31, 0x1
 	bne loc_0x042
 	li r28, 0x0
 	li r16, 0xd
 loc_0x042:
 	lis r31, 0x804e
-	lwz r31, 0x90c(r31)
+	lwz r31, 0x94c(r31)
 	cmpwi r31, 0x0
 	ble loc_0x054
 	lwz r31, 0x24(r3)
@@ -3803,7 +3790,7 @@ loc_0x094:
 	mtctr r0
 	bctrl
 	lis r4, 0x804e
-	lwz r4, 0x7d4(r4)
+	lwz r4, 0x7cc(r4)
 	addi r4, r4, 0x100
 	lis r0, 0x8015
 	ori r0, r0, 0x2c4c
@@ -4009,7 +3996,7 @@ HOOK @ $8000E588                # Address = $(ba + 0x0000E588)
 	cmpwi r31, 0x1
 	bne loc_0x0D3
 	lis r31, 0x804e
-	lwz r31, 0xeb0(r31)
+	lwz r31, 0xedc(r31)
 	cmpwi r31, 0x1
 	bne loc_0x0D3
 	li r31, 0x14
@@ -4302,7 +4289,7 @@ HOOK @ $806BE080                # Address = $(ba + 0x006BE080)
 	ori r11, r11, 0x49cc
 	mtctr r11
 	lis r11, 0x804e
-	ori r11, r11, 0x7d4
+	ori r11, r11, 0x7cc
 	li r12, 0x4
 	addi r10, r11, 0x5
 loc_0x007:
@@ -4917,7 +4904,7 @@ HOOK @ $8084D0D4                # Address = $(ba + 0x0084D0D4)
 	stwu r1, -0x84(r1)
 	stmw r3, 0x8(r1)
 	lis r31, 0x804e
-	lwz r31, 0xb08(r31)
+	lwz r31, 0xb1c(r31)
 	cmpwi r31, 0x2
 	beq loc_0x083
 	cmpwi r31, 0x0
@@ -5131,7 +5118,7 @@ HOOK @ $8001735C                # Address = $(ba + 0x0001735C)
 	lis r28, 0x804e
 	lwz r28, 0x260(r28)
 	lis r27, 0x804e
-	lwz r27, 0xb08(r27)
+	lwz r27, 0xb1c(r27)
 	cmpw r28, r27
 	beq loc_0x014
 	lis r30, 0x804e
@@ -5145,7 +5132,7 @@ loc_0x014:
 	lis r28, 0x804e
 	ori r28, r28, 0x260
 	lis r27, 0x804e
-	lwz r27, 0xb08(r27)
+	lwz r27, 0xb1c(r27)
 	stw r27, 0x0(r28)
 	lmw r3, 0x8(r1)
 	addi r1, r1, 0x84
@@ -5155,6 +5142,461 @@ loc_0x014:
 	mtlr r0
 	lwz r0, -0x4(r1)
 	cmpwi r24, 0x1
+}
+
+#######################################################################################################################
+[CM: _PlayerSlotColorChangers v3.0.0] Incr and Decr Slot Color with L/R, Reset with Z on Player Kind Button [QuickLava]
+#######################################################################################################################
+HOOK @ $8068B168                # Address = $(ba + 0x0068B168)
+{
+	cmpwi r26, 0x1d
+	bne loc_0x021
+	lwz r12, 0x44(r4)
+	lwz r12, 0x1b4(r12)
+	cmplwi r12, 0x1
+	bne loc_0x021
+	lis r11, 0x804e
+	lbz r12, 0x304(r11)
+	cmpwi r12, 0x10
+	beq loc_0x021
+	rlwimi r11, r29, 2, 16, 29      # (Mask: 0x00003fff)
+	lwz r11, 0x2f4(r11)
+	rlwinm. r12, r0, 28, 31, 31     # (Mask: 0x00000010)
+	lwz r30, 0x10(r11)
+	bne loc_0x01B
+	rlwinm r12, r0, 27, 31, 31      # (Mask: 0x00000020)
+	rlwinm r30, r0, 26, 31, 31      # (Mask: 0x00000040)
+	subf. r12, r30, r12
+	beq loc_0x021
+	lwz r30, 0x8(r11)
+	add r30, r30, r12
+	cmpwi r30, 0xc
+	ble loc_0x018
+	li r30, 0x0
+loc_0x018:
+	cmpwi r30, 0x0
+	bge loc_0x01B
+	li r30, 0xc
+loc_0x01B:
+	stw r30, 0x8(r11)
+	lwz r11, 0x44(r4)
+	lwz r12, 0x1b4(r11)
+	subi r12, r12, 0x1
+	stw r12, 0x1b4(r11)
+	li r0, 0x100
+loc_0x021:
+	rlwinm. r0, r0, 0, 23, 23       # (Mask: 0x00000100)
+	nop
+}
+
+#############################################################################################
+[CM: _PlayerSlotColorChangers v3.0.0] Results Screen Player Names are Transparent [QuickLava]
+#############################################################################################
+* 040EA724 3D60804E             # 32-Bit Write @ $(ba + 0x000EA724):  0x3D60804E
+
+HOOK @ $800EA73C                # Address = $(ba + 0x000EA73C)
+{
+	lwz r5, 0xc(r3)
+	mulli r12, r4, 0x48
+	stbx r11, r5, r12
+	addi r11, r11, 0x7a4
+	lswi r5, r11, 16
+}
+
+HOOK @ $800EA8C0                # Address = $(ba + 0x000EA8C0)
+{
+	lwz r5, 0xc(r3)
+	mulli r12, r4, 0x48
+	lis r11, 0x804e
+	stbx r11, r5, r12
+	addi r11, r11, 0x7a4
+	lswi r5, r11, 16
+	nop
+}
+
+##################################################################################
+[CM: _PlayerSlotColorChangers v3.0.0] CSS Player Names are Transparent [QuickLava]
+##################################################################################
+HOOK @ $8069B268                # Address = $(ba + 0x0069B268)
+{
+	lis r11, 0x804e
+	addi r11, r11, 0x7a4
+	lswi r5, r11, 16
+}
+
+##################################################################################
+[CM: _PlayerSlotColorChangers v3.0.0] Cache SelChar Team Battle Status [QuickLava]
+##################################################################################
+HOOK @ $8068EDA8                # Address = $(ba + 0x0068EDA8)
+{
+	rlwinm r12, r4, 3, 0, 28        # (Mask: 0x1fffffff)
+	addi r12, r12, 0x8
+	lis r11, 0x804e
+	stb r12, 0x304(r11)
+	mr r28, r3
+}
+
+#######################################################################################
+[CM: _PlayerSlotColorChangers v3.0.0] Cache In-game Mode Team Battle Status [QuickLava]
+#######################################################################################
+HOOK @ $800E0A44                # Address = $(ba + 0x000E0A44)
+{
+	rlwinm r12, r0, 3, 0, 28        # (Mask: 0x1fffffff)
+	addi r12, r12, 0x8
+	lis r11, 0x804e
+	stb r12, 0x304(r11)
+	cmpwi r0, 0x0
+}
+
+##########################################################################################################
+[CM: _PlayerSlotColorChangers v3.0.0] Only 2P Stadium Boss Battles Are Considered Team Battles [QuickLava]
+##########################################################################################################
+HOOK @ $806E5F08                # Address = $(ba + 0x006E5F08)
+{
+	stb r23, 0x13(r30)
+	stb r31, 0x99(r25)
+	nop
+}
+
+################################################################################################################
+[CM: _PlayerSlotColorChangers v3.0.0] Disable Franchise Icon Color 10-Frame Offset in Results Screen [QuickLava]
+################################################################################################################
+* C60EBB98 800EBBB8             # Create Branch @ $(ba + 0x000EBB98): b 0x800EBBB8
+* C60EBDE4 800EBE00             # Create Branch @ $(ba + 0x000EBDE4): b 0x800EBE00
+
+###############################################################################
+[CM: _PlayerSlotColorChangers v3.0.0] Hand Color Fix [QuickLava]
+# Fixes a conflict with Eon's Roster-Size-Based Hand Resizing code, which could
+# in some cases cause CSS hands to wind up the wrong color.
+###############################################################################
+* 0469CA2C C0031014             # 32-Bit Write @ $(ba + 0x0069CA2C):  0xC0031014
+
+###############################################################################
+[CM: _PlayerSlotColorChangers v3.0.0] CSS Random Always Uses P1 CSP [QuickLava]
+###############################################################################
+HOOK @ $80697558                # Address = $(ba + 0x00697558)
+{
+	li r24, 0x0
+	li r25, 0x1f5
+	nop
+}
+
+###################################################################################################
+[CM: _PlayerSlotColorChangers v3.0.0] Color Choice Resets on Setting PlayerKind to None [QuickLava]
+# Ensures that colors are reset when players unplug their controllers,
+# while also providing an easy way of resetting without the use of the added controls.
+###################################################################################################
+HOOK @ $8068BE94                # Address = $(ba + 0x0068BE94)
+{
+	cmplwi r5, 0x0
+	bne loc_0x006
+	oris r11, r0, 0x804e
+	lwz r11, 0x2f4(r11)
+	lwz r12, 0x10(r11)
+	stw r12, 0x8(r11)
+loc_0x006:
+	mr r27, r5
+}
+
+#################################################################################################################
+[CM: _PlayerSlotColorChangers v3.0.0] Bootleg CLR0 v4 Support Patch [QuickLava]
+# Fakes CLR0 v4 support by rearranging the contents of the v4 header such that they match the orientation
+# found in v3 files, just with the UserData pointer stuck to the end. This ensures that we maintain compatibility
+# with the game's assumptions about where the struct's fields should be, while keeping access to UserData!
+#################################################################################################################
+HOOK @ $80197DC4                # Address = $(ba + 0x00197DC4)
+{
+	lwz r11, 0x0(r5)
+	lwz r12, 0x8(r11)
+	cmplwi r12, 0x4
+	bne loc_0x010
+	lwz r8, 0x1c(r11)
+	lwzux r12, r8, r11
+	subis r12, r12, 0x6c42
+	subi r12, r12, 0x4330
+	cmplwi r12, 0x9
+	bgt loc_0x010
+	lmw r28, 0x18(r11)
+	lwz r12, 0x14(r11)
+	stmw r28, 0x14(r11)
+	stw r12, 0x24(r11)
+	li r12, 0x3
+	stw r12, 0x8(r11)
+loc_0x010:
+	lwz r8, 0x0(r5)
+}
+
+#########################################################################################
+[CM: _PlayerSlotColorChangers v3.0.0] Borrow Stack Space [QuickLava]
+# Consolidates two stack locations the game uses for float conversions into just one,
+# allowing us to use the newly freed one as storage for some of the variables we'll need!
+#########################################################################################
+* 04193494 9061000C             # 32-Bit Write @ $(ba + 0x00193494):  0x9061000C
+* 04193498 90010008             # 32-Bit Write @ $(ba + 0x00193498):  0x90010008
+* 0419349C C8010008             # 32-Bit Write @ $(ba + 0x0019349C):  0xC8010008
+
+###############################################################################
+[CM: _PlayerSlotColorChangers v3.0.0] Embed Color and Scheme Tables [QuickLava]
+###############################################################################
+* 4E000008 00000000             # Put Next Code Loc in PO: po = (Next Code Address) + 8
+* 66200020 00000000             # Goto: Jump to Next Line, then forward 32 more Line(s) Regardless of Execution Status
+* 00000000 00000000             # ........      | DATA_EMBED (0x100 bytes)
+* 00000000 40377778             # ....@7wx
+* 3F800000 3F000000             # ?...?...
+* 00000000 00000000             # ........
+* 3F000000 3F000000             # ?...?...
+* 3F800000 3EE66666             # ?...>.ff
+* 3F222223 3F666666             # ?""#?fff
+* 3F19999A 40A80001             # ?...@...
+* 3F800000 3F000000             # ?...?...
+* 40955556 3F800000             # @.UV?...
+* 3F000000 40A00001             # ?...@...
+* 3F666666 3F000000             # ?fff?...
+* 00000000 00000000             # ........
+* 3F800000 40666666             # ?...@fff
+* 3F800000 3F000000             # ?...?...
+* 4079999A 3F333333             # @y..?333
+* 3F000000 40066666             # ?...@.ff
+* 3F4CCCCD 3EC00000             # ?L..>...
+* 00000000 3F800000             # ....?...
+* 3F000000 40B9999A             # ?...@...
+* 3F800000 3F000000             # ?...?...
+* 00000000 3F800000             # ....?...
+* 3F000000 3F866666             # ?...?.ff
+* 3F4CCCCD 3F0CCCCD             # ?L..?...
+* 3F59999A 3F800000             # ?Y..?...
+* 3F000000 0E0E0E0D             # ?.......
+* 0A0A0909 10100F0F             # ........
+* 0B0B0B0B 05050505             # ........
+* 06060607 03030304             # ........
+* 01010101 02020202             # ........
+* 00080008 08080808             # ........
+* 0C0C0C0C 000C000C             # ........
+* 4C000000 004E0308             # Store Pointer Offset: Val @ $(0x004E0308) = po
+* E0000000 80008000             # Full Terminator: ba = 0x80000000, po = 0x80000000
+
+###########################################################
+[CM: _PlayerSlotColorChangers v3.0.0] Prep Code [QuickLava]
+###########################################################
+HOOK @ $80193410                # Address = $(ba + 0x00193410)
+{
+	lwz r28, 0x10(r6)
+	cmplwi r28, 0x28
+	bne loc_0x02D
+	lwz r28, 0x18(r6)
+	lwzx r28, r6, r28
+	subis r28, r28, 0x6c42
+	subi r28, r28, 0x4330
+	cmplwi cr7, r28, 0x3
+	bgt cr7, loc_0x02D
+	beq cr7, loc_0x014
+	cmplwi r28, 0x0
+	beq loc_0x014
+	fmr f13, f1
+	cmplwi r28, 0x1
+	beq loc_0x011
+	lfs f12, -0x6170(r2)
+	fadd f13, f13, f12
+loc_0x011:
+	fctiwz f13, f13
+	stfd f13, 0x10(r1)
+	b loc_0x01C
+loc_0x014:
+	lwz r11, 0x14(r6)
+	add r11, r11, r6
+	lwzu r12, -0x4(r11)
+	lwzx r12, r11, r12
+	rlwinm r12, r12, 0, 28, 31      # (Mask: 0x0000000f)
+	beq cr7, loc_0x01B
+	addi r12, r12, 0x1
+loc_0x01B:
+	stw r12, 0x14(r1)
+loc_0x01C:
+	li r12, 0x0
+	stw r12, 0x10(r1)
+	lwz r11, 0x24(r6)
+	cmplwi r11, 0x0
+	beq loc_0x02E
+	add r11, r6, r11
+	lwzu r12, 0x4(r11)
+	add r11, r11, r12
+	lwz r12, 0x8(r11)
+	cmplw r5, r12
+	bge loc_0x02E
+	lwz r12, 0x4(r11)
+	add r11, r11, r12
+	rlwinm r12, r5, 2, 0, 29        # (Mask: 0x3fffffff)
+	lwzx r12, r11, r12
+	stw r12, 0x10(r1)
+	b loc_0x02E
+loc_0x02D:
+	orc r28, r28, r28
+loc_0x02E:
+	sth r28, 0x14(r1)
+	addi r5, r5, 0x1
+	nop
+}
+
+###########################################################
+[CM: _PlayerSlotColorChangers v3.0.0] Main Code [QuickLava]
+###########################################################
+HOOK @ $801934FC                # Address = $(ba + 0x001934FC)
+{
+	lhz r12, 0x14(r1)
+	cmplwi r12, 0xffff
+	beq loc_0x08F
+	lwz r12, 0x10(r1)
+	subfic r0, r26, 0x20
+	rlwnm. r0, r12, r0, 31, 31      # (Mask: 0x00000001)
+	bne loc_0x08F
+	b loc_0x013
+loc_0x008:
+	fcmpu cr1, f7, f10
+	bgt cr1, loc_0x012
+	fcmpu cr1, f7, f9
+	bgt cr1, loc_0x00E
+	fmul f7, f7, f8
+	b loc_0x012
+loc_0x00E:
+	fsub f7, f7, f9
+	fsub f10, f9, f8
+	fmadd f7, f7, f10, f8
+	fadd f10, f9, f9
+loc_0x012:
+	blr
+loc_0x013:
+	lhz r0, 0x16(r1)
+	cmplwi r0, 0x1
+	blt loc_0x08F
+	cmplwi r0, 0x4
+	bgt loc_0x08F
+	lis r11, 0x804e
+	lfd f10, 0x10(r11)
+	li r12, 0xff
+	stw r12, 0x1c(r11)
+	lfd f9, 0x18(r11)
+	fsub f9, f9, f10
+	rlwinm r12, r3, 8, 24, 31       # (Mask: 0xff000000)
+	mulli r12, r12, 0x6
+	stw r12, 0x1c(r11)
+	lfd f11, 0x18(r11)
+	fsub f11, f11, f10
+	fdiv f11, f11, f9
+	rlwinm r12, r3, 16, 24, 31      # (Mask: 0x00ff0000)
+	rlwinm r12, r12, 1, 0, 30       # (Mask: 0x7fffffff)
+	stw r12, 0x1c(r11)
+	lfd f12, 0x18(r11)
+	fsub f12, f12, f10
+	fdiv f12, f12, f9
+	rlwinm r12, r3, 24, 24, 31      # (Mask: 0x0000ff00)
+	rlwinm r12, r12, 1, 0, 30       # (Mask: 0x7fffffff)
+	stw r12, 0x1c(r11)
+	lfd f13, 0x18(r11)
+	fsub f13, f13, f10
+	fdiv f13, f13, f9
+	lbz r12, 0x304(r11)
+	rlwimi r11, r0, 2, 16, 29       # (Mask: 0x00003fff)
+	lwz r11, 0x2f0(r11)
+	lwzx r12, r11, r12
+	rlwinm r12, r12, 2, 0, 29       # (Mask: 0x3fffffff)
+	addi r12, r12, 0xcc
+	lbz r0, 0x11(r1)
+	add r12, r12, r0
+	lis r11, 0x804e
+	lwz r11, 0x308(r11)
+	lbzx r12, r11, r12
+	mulli r0, r12, 0xc
+	lfsux f9,  r11,  r0
+	fadd f11, f11, f9
+	lfs f9, -0x6170(r2)
+	fadd f10, f9, f9
+	fadd f8, f9, f10
+	fadd f8, f8, f8
+	b loc_0x044
+loc_0x043:
+	fsub f11, f11, f8
+loc_0x044:
+	fcmpu cr1, f11, f8
+	bge cr1, loc_0x043
+	fmr f7, f12
+	lfs f8, 0x4(r11)
+	bl loc_0x008
+	fmr f12, f7
+	fmr f7, f13
+	lfs f8, 0x8(r11)
+	bl loc_0x008
+	fmr f13, f7
+	fadd f7, f13, f13
+	fsub f7, f7, f9
+	fabs f7, f7
+	fsub f7, f9, f7
+	fmul f7, f7, f12
+	fmr f8, f11
+	b loc_0x056
+loc_0x055:
+	fsub f8, f8, f10
+loc_0x056:
+	fcmpu cr1, f8, f10
+	bge cr1, loc_0x055
+	fsub f8, f8, f9
+	fabs f8, f8
+	fsub f8, f9, f8
+	fmul f8, f8, f7
+	fdiv f10, f7, f10
+	fsub f10, f13, f10
+	fctiwz f9, f11
+	lis r11, 0x804e
+	stfd f9, 0x1c(r11)
+	lwz r12, 0x20(r11)
+	mtctr r12
+	cmplwi r12, 0x0
+	fsub f13, f13, f13
+	fmr f11, f7
+	fmr f12, f8
+	beq loc_0x078
+	fmr f11, f8
+	fmr f12, f7
+	bdz loc_0x078
+	fsub f11, f11, f11
+	fmr f12, f7
+	fmr f13, f8
+	bdz loc_0x078
+	fmr f12, f8
+	fmr f13, f7
+	bdz loc_0x078
+	fsub f12, f12, f12
+	fmr f13, f7
+	fmr f11, f8
+	bdz loc_0x078
+	fmr f13, f8
+	fmr f11, f7
+loc_0x078:
+	lfd f7, 0x10(r11)
+	li r12, 0xff
+	stw r12, 0x1c(r11)
+	lfd f8, 0x18(r11)
+	fsub f8, f8, f7
+	fadd f11, f11, f10
+	fmul f11, f11, f8
+	fctiwz f11, f11
+	stfd f11, 0x1c(r11)
+	lwz r12, 0x20(r11)
+	rlwimi r3, r12, 24, 0, 7        # (Mask: 0x000000ff)
+	fadd f12, f12, f10
+	fmul f12, f12, f8
+	fctiwz f12, f12
+	stfd f12, 0x1c(r11)
+	lwz r12, 0x20(r11)
+	rlwimi r3, r12, 16, 8, 15       # (Mask: 0x000000ff)
+	fadd f13, f13, f10
+	fmul f13, f13, f8
+	fctiwz f13, f13
+	stfd f13, 0x1c(r11)
+	lwz r12, 0x20(r11)
+	rlwimi r3, r12, 8, 16, 23       # (Mask: 0x000000ff)
+loc_0x08F:
+	stw r3, 0x4(r28)
+	nop
 }
 
 ################################################################################
@@ -5177,7 +5619,7 @@ HOOK @ $808E0094                # Address = $(ba + 0x008E0094)
 	word 0x00000000                 # ....
 data_0x00D:
 	lis r30, 0x804e
-	lwz r30, 0x1d4c(r30)
+	lwz r30, 0x21d8(r30)
 	cmplwi r30, 0x0
 	lis r11, 0x2
 	li r12, 0x0
@@ -5204,50 +5646,44 @@ loc_0x018:
 HOOK @ $808734F8                # Address = $(ba + 0x008734F8)
 {
 	lis r11, 0x804e
-	lwz r12, 0x1da4(r11)
+	lwz r12, 0x2220(r11)
 	cmplwi r12, 0x0
-	beq loc_0x028
-	lwz r11, 0x1e54(r11)
+	beq loc_0x022
+	mtctr r12
+	lwz r11, 0x22d0(r11)
 	mr r0, r11
-	addic. r12, r12, -0x1
-	beq loc_0x01E
+	bdz loc_0x018
 	add r0, r11, r3
-	addic. r12, r12, -0x1
-	beq loc_0x01E
+	bdz loc_0x018
 	subf r0, r11, r3
-	addic. r12, r12, -0x1
-	beq loc_0x01E
+	bdz loc_0x018
 	mullw r0, r11, r3
-	addic. r12, r12, -0x1
-	beq loc_0x01E
+	bdz loc_0x018
 	divwu r0, r3, r11
-	addic. r12, r12, -0x1
-	beq loc_0x01E
-	subf r0, r3, r11
-	cmpwi r0, 0x0
-	bge loc_0x018
+	bdz loc_0x018
+	subf. r0, r3, r11
+	bge loc_0x013
 	neg r0, r0
-loc_0x018:
-	addic. r12, r12, -0x1
-	beq loc_0x01E
+loc_0x013:
+	bdz loc_0x018
 	lwz r3, -0x4364(r13)
 	divwu r0, r3, r11
 	mullw r0, r0, r11
 	subf r0, r0, r3
-loc_0x01E:
+loc_0x018:
 	lis r11, 0x804e
-	lwz r12, 0x1e94(r11)
+	lwz r12, 0x2310(r11)
 	cmpw r0, r12
-	bge loc_0x023
+	bge loc_0x01D
 	mr r0, r12
-loc_0x023:
-	lwz r12, 0x1edc(r11)
+loc_0x01D:
+	lwz r12, 0x2358(r11)
 	cmpw r0, r12
-	ble loc_0x027
+	ble loc_0x021
 	mr r0, r12
-loc_0x027:
+loc_0x021:
 	mr r3, r0
-loc_0x028:
+loc_0x022:
 	xoris r3, r3, 0x8000
 }
 
